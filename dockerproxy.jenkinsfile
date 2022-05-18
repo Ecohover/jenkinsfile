@@ -1,0 +1,37 @@
+def commitId
+pipeline {
+    agent none
+    triggers {
+        pollSCM 'H/5 * * * *'
+    }
+    environment {
+        REPO = 'http://tfs.cybersoft4u.com.tw:8080/tfs/SDD/TIS/_git/CyberSoft.MiniTis/commit/'
+    }
+    stages {
+      stage('Docker pull and save') {
+          input {
+            message "input docker image name and version"
+            parameters{
+              string(name: 'imagename' description: 'Image Name')
+              string(name: 'imageversion' defaultValue: 'latest' description: 'Image Version')
+            }
+          }
+          steps {
+              sh """
+                docker pull $(imagename):$(imageversion)
+                docker save --output $(imagename).$(imageversion).tar $(imagename):$(imageversion)
+              """
+            }
+          }
+        }
+      }
+      stage('Clean workspace') {
+        options {
+            skipDefaultCheckout true
+        }
+        steps {
+            cleanWs()
+        }
+      }
+    }
+}
