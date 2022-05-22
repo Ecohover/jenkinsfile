@@ -11,8 +11,8 @@ pipeline {
           input {
             message "input docker image name and version"
             parameters{
-              string(name: 'imagename' description: 'Image Name')
-              string(name: 'imageversion' defaultValue: 'latest' description: 'Image Version')
+              string(name: 'imagename', description: 'Image Name')
+              string(name: 'imageversion', defaultValue: 'latest', description: 'Image Version')
             }
           }
           steps {
