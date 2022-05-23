@@ -9,13 +9,11 @@ pipeline {
 	stages {
 		stage('Docker pull and save') {
 			script {
-				def USER_INPUT =input(
-				id: 'userInput', 
-				message: 'input docker image name and version', 
-				parameters: [
-				[$class: 'TextParameterDefinition', description: 'imagename', name: 'imagename'],
-				[$class: 'TextParameterDefinition', defaultValue: 'latest', description: 'imageversion', name: 'imageversion']
-				])
+			    def INPUT_PARAMS = input message: "Setting Which Repository And Branch Should be Scanned",
+					parameters: [
+						string(name: 'imagename', description: 'imagename'),
+						string(name: 'imageversion', defaultValue: 'latest', description: 'imageversion')
+					]
 				sh """
 				docker pull $(imagename):$(imageversion)
 				docker save --output $(imagename).$(imageversion).tar $(imagename):$(imageversion)
