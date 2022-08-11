@@ -6,13 +6,19 @@ pipeline {
 	environment {
 	}
 	stages {
-		stage('Docker pull and save') {
+		stage('Select targe') {
 			script {
 			    def INPUT_PARAMS = input message: "Setting Which Repository And Branch Should be Scanned",
 					parameters: [
-						string(name: 'imagename', description: 'imagename'),
-						string(name: 'imageversion', defaultValue: 'latest', description: 'imageversion')
+						string(name: 'IMAGENAME', description: 'imagename'),
+						string(name: 'IMAGEVERSION', defaultValue: 'latest', description: 'imageversion')
 					]
+			    env.IMAGENAME = INPUT_PARAMS.IMAGENAME
+			    env.IMAGEVERSION = INPUT_PARAMS.IMAGEVERSION
+			}
+		}
+		stage('Docker pull and save') {
+			script {
 				sh """
 				docker pull $(imagename):$(imageversion)
 				docker save --output $(imagename).$(imageversion).tar $(imagename):$(imageversion)
